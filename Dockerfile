@@ -54,7 +54,11 @@ ARG USER_UID=1000
 ARG USER_GID=1000
 WORKDIR /app
 COPY --chown=node:node --from=build /app /app
-RUN npm install --global --omit=dev @anthropic-ai/claude-code@latest @openai/codex@latest opencode-ai \
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends docker.io sudo \
+  && echo 'node ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/node \
+  && rm -rf /var/lib/apt/lists/* \
+  && npm install --global --omit=dev @anthropic-ai/claude-code@latest @openai/codex@latest opencode-ai \
   && mkdir -p /paperclip \
   && chown node:node /paperclip
 

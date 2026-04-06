@@ -35,6 +35,9 @@ services:
       PAPERCLIP_TELEMETRY_DISABLED: "1"
     volumes:
       - paperclip-data:/paperclip
+      - /var/run/docker.sock:/var/run/docker.sock
+    group_add:
+      - "${DOCKER_GID:-988}"
     depends_on:
       db:
         condition: service_healthy
