@@ -22,17 +22,8 @@ if [ "$(id -g node)" -ne "$PGID" ]; then
     changed=1
 fi
 
-# Docker socket access
-if [ -S /var/run/docker.sock ]; then
-    DOCKER_SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
-    if ! getent group docker > /dev/null 2>&1; then
-        groupadd -g "$DOCKER_SOCK_GID" docker
-    else
-        groupmod -g "$DOCKER_SOCK_GID" docker
-    fi
-    usermod -aG docker node
+if [ "$changed" = "1" ]; then
+    chown -R node:node /paperclip
 fi
-
-chown -R node:node /paperclip
 
 exec gosu node "$@"
